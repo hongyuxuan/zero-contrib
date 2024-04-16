@@ -11,20 +11,20 @@ import (
 )
 
 type target struct {
-	Addr        string        `key:",optional"`
-	User        string        `key:",optional"`
-	Password    string        `key:",optional"`
-	Service     string        `key:",optional"`
-	GroupName   string        `key:",optional"`
-	Clusters    []string      `key:",optional"`
-	NamespaceID string        `key:"namespaceid,optional"`
-	Timeout     time.Duration `key:"timeout,optional"`
-	AppName     string        `key:"appName,optional"`
-	LogLevel    string        `key:",optional"`
-	LogDir      string        `key:",optional"`
-	CacheDir    string        `key:",optional"`
-	NotLoadCacheAtStart  bool `key:"notLoadCacheAtStart,optional"`
-	UpdateCacheWhenEmpty bool `key:"updateCacheWhenEmpty,optional"`
+	Addr                 string        `key:",optional"`
+	User                 string        `key:",optional"`
+	Password             string        `key:",optional"`
+	Service              string        `key:",optional"`
+	GroupName            string        `key:"group,optional"`
+	Clusters             []string      `key:",optional"`
+	NamespaceID          string        `key:"namespaceid,optional"`
+	Timeout              time.Duration `key:"timeout,optional"`
+	AppName              string        `key:"appName,optional"`
+	LogLevel             string        `key:",optional"`
+	LogDir               string        `key:",optional"`
+	CacheDir             string        `key:",optional"`
+	NotLoadCacheAtStart  bool          `key:"notLoadCacheAtStart,optional"`
+	UpdateCacheWhenEmpty bool          `key:"updateCacheWhenEmpty,optional"`
 }
 
 // parseURL with parameters
@@ -44,6 +44,10 @@ func parseURL(rawURL url.URL) (target, error) {
 	err := mapping.UnmarshalKey(params, &tgt)
 	if err != nil {
 		return target{}, errors.Wrap(err, "Malformed URL parameters")
+	}
+
+	if tgt.GroupName == "" {
+		tgt.GroupName = "DEFAULT_GROUP"
 	}
 
 	if tgt.NamespaceID == "" {
